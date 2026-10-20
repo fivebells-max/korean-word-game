@@ -189,10 +189,26 @@
     button.submit-btn:active { transform: scale(0.98); }
 
     .message-area {
-      min-height: 28px;
+      min-height: 50px;
       font-size: 15px;
       font-weight: 700;
       word-break: keep-all;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .msg-main { font-weight: 800; }
+    .msg-meaning {
+      font-size: 13px;
+      font-weight: 500;
+      color: #334155;
+      background-color: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-top: 4px;
     }
 
     .msg-correct { color: var(--success); }
@@ -279,60 +295,228 @@
   </div>
 
   <script>
+    // 단어별 표준 사전 뜻 데이터베이스가 통합된 50문항 문제 은행
     const questionBank = [
-      { type: '접사', word: '풋-', tagClass: 'affix', hint: '‘덜 익은’의 뜻을 더함 (접두사)', targetWord: '풋', position: 'start', validAnswers: ['풋사랑', '풋과일', '풋사과', '풋고추', '풋나물', '풋잠', '풋낯', '풋바둑'] },
-      { type: '어근', word: '물', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 실질적 어근', targetWord: '물', position: 'any', validAnswers: ['샘물', '물개', '먹물', '물통', '물병', '눈물', '물수제비', '물걸레', '수돗물', '물구름', '물안개', '물약', '물방울'] },
-      { type: '접사', word: '-꾼', tagClass: 'affix', hint: '‘어떤 일을 전문적/습관적으로 하는 사람’ (접미사)', targetWord: '꾼', position: 'end', validAnswers: ['누리꾼', '사냥꾼', '장난꾼', '구경꾼', '낚시꾼', '일꾼', '살림꾼', '말꾼', '춤꾼', '씨름꾼'] },
-      { type: '접사', word: '햇-', tagClass: 'affix', hint: '‘당해에 새로 난’의 뜻을 더함 (접두사)', targetWord: '햇', position: 'start', validAnswers: ['햇밤', '햇곡식', '햇과일', '햇쌀', '햇감자', '햇고구마', '햇보리', '햇마늘', '햇양파'] },
-      { type: '접사', word: '-쟁이', tagClass: 'affix', hint: '‘그 속성을 유난히 많이 지닌 사람’ (접미사)', targetWord: '쟁이', position: 'end', validAnswers: ['방귀쟁이', '고집쟁이', '멋쟁이', '겁쟁이', '수다쟁이', '떼쟁이', '개구쟁이', '욕심쟁이', '변덕쟁이'] },
-      { type: '어근', word: '꿈', tagClass: 'root', hint: '다른 어근과 결합하여 합성어를 만드는 어근', targetWord: '꿈', position: 'any', validAnswers: ['꿈길', '꿈나무', '꿈결', '꿈나라', '꿈자리', '돼지꿈', '첫꿈', '꿈속'] },
-      { type: '접사', word: '홑-', tagClass: 'affix', hint: '‘한 겹으로 된’ 또는 ‘하나인’ (접두사)', targetWord: '홑', position: 'start', validAnswers: ['홑이불', '홑잎', '홑옷', '홑문', '홑몸', '홑소리', '홑문장'] },
-      { type: '접사', word: '-질', tagClass: 'affix', hint: '‘도구를 사용하는 동작이나 일 또는 행동’ (접미사)', targetWord: '질', position: 'end', validAnswers: ['부채질', '가위질', '걸레질', '다리미질', '숟가락질', '붓질', '칼질', '장난질', '주먹질', '손가락질', '도끼질'] },
-      { type: '접사', word: '잔-', tagClass: 'affix', hint: '‘가느다란’ 또는 ‘자잘한’ (접두사)', targetWord: '잔', position: 'start', validAnswers: ['잔가지', '잔가시', '잔머리', '잔주름', '잔돈', '잔심부름', '잔정', '잔파'] },
-      { type: '어근', word: '꽃', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 어근', targetWord: '꽃', position: 'any', validAnswers: ['꽃집', '나팔꽃', '꽃비', '불꽃', '눈꽃', '들꽃', '제비꽃', '꽃밭', '꽃다발', '꽃화분'] },
-      { type: '접사', word: '군-', tagClass: 'affix', hint: '‘쓸데없는’ 또는 ‘가선의’ (접두사)', targetWord: '군', position: 'start', validAnswers: ['군소리', '군살', '군식구', '군말', '군손질', '군눈', '군침'] },
-      { type: '접사', word: '-보', tagClass: 'affix', hint: '‘그것이 심하거나 많은 사람’ (접미사)', targetWord: '보', position: 'end', validAnswers: ['울보', '먹보', '잠보', '겁보', '털보', '느림보', '꾀보', '뚱뚱보'] },
-      { type: '어근', word: '돌', tagClass: 'root', hint: '다른 어근과 결합하는 단단한 어근', targetWord: '돌', position: 'any', validAnswers: ['돌다리', '돌담', '돌산', '돌탑', '돌길', '돌집', '징검다리', '돌멩이'] },
-      { type: '접사', word: '날-', tagClass: 'affix', hint: '‘가공하지 않은’의 뜻을 더함 (접두사)', targetWord: '날', position: 'start', validAnswers: ['날고기', '날것', '날계란', '날생선', '날가죽', '날두부'] },
-      { type: '접사', word: '-님', tagClass: 'affix', hint: '‘높임’의 뜻을 더함 (접미사)', targetWord: '님', position: 'end', validAnswers: ['선생님', '달님', '해님', '토끼님', '부모님', '임금님', '사장님', '원장님'] },
-      { type: '어근', word: '손', tagClass: 'root', hint: '신체 부위와 관련된 실질적 어근', targetWord: '손', position: 'any', validAnswers: ['손수건', '손수레', '손짓', '손목', '손가락', '손톱', '맨손', '손잡이', '손난로'] },
-      { type: '접사', word: '맨-', tagClass: 'affix', hint: '‘다른 것이 없는’의 뜻을 더함 (접두사)', targetWord: '맨', position: 'start', validAnswers: ['맨손', '맨발', '맨땅', '맨얼굴', '맨입', '맨몸'] },
-      { type: '접사', word: '참-', tagClass: 'affix', hint: '‘진짜의’ 또는 ‘품질이 좋은’ (접두사)', targetWord: '참', position: 'start', validAnswers: ['참꽃', '참기름', '참사랑', '참나무', '참말', '참새'] },
-      { type: '어근', word: '해', tagClass: 'root', hint: '하늘에 떠 있는 태양 관련 어근', targetWord: '해', position: 'any', validAnswers: ['해돋이', '해살', '해맞이', '햇빛', '해질녘', '해오름'] },
-      { type: '접사', word: '-개', tagClass: 'affix', hint: '‘도구’나 ‘사람’을 나타냄 (접미사)', targetWord: '개', position: 'end', validAnswers: ['지우개', '날개', '덮개', '집게', '지게', '베개'] },
-      { type: '접사', word: '강-', tagClass: 'affix', hint: '‘다른 것이 섞이지 않은’ (접두사)', targetWord: '강', position: 'start', validAnswers: ['강굴', '강술', '강풀', '강주먹', '강호령'] },
-      { type: '접사', word: '-막이', tagClass: 'affix', hint: '‘막는 물건이나 일’ (접미사)', targetWord: '막이', position: 'end', validAnswers: ['바람막이', '물막이', '눈막이', '비막이', '총알막이'] },
-      { type: '어근', word: '불', tagClass: 'root', hint: '뜨거운 불과 관련된 실질적 어근', targetWord: '불', position: 'any', validAnswers: ['불꽃', '불씨', '불꽃놀이', '횃불', '등불', '들불', '불자국', '불장난', '불장난하다', '불도저', '불조심'] },
-      { type: '접사', word: '선-', tagClass: 'affix', hint: '‘서투른’ 또는 ‘충분치 못한’ (접두사)', targetWord: '선', position: 'start', validAnswers: ['선무당', '선하품', '선잠', '선웃음', '선동무'] },
-      { type: '접사', word: '-이', tagClass: 'affix', hint: '사람이나 사물을 나타내는 접미사', targetWord: '이', position: 'end', validAnswers: ['길잡이', '목잡이', '해돋이', '높이', '넓이', '길이'] },
-      { type: '어근', word: '밤', tagClass: 'root', hint: '어두운 밤 시간을 나타내는 어근', targetWord: '밤', position: 'any', validAnswers: ['밤길', '밤하늘', '알밤', '늦밤', '한밤중', '밤낮'] },
-      { type: '접사', word: '들-', tagClass: 'affix', hint: '‘야생의’ 또는 ‘들판의’ (접두사)', targetWord: '들', position: 'start', validAnswers: ['들꽃', '들풀', '들개', '들쥐', '들시국', '들장미'] },
-      { type: '접사', word: '-거리', tagClass: 'affix', hint: '‘거리나 대상의 뜻을 더함’ (접미사)', targetWord: '거리', position: 'end', validAnswers: ['볼거리', '먹거리', '웃음거리', '일거리', '구경거리', '이야깃거리'] },
-      { type: '어근', word: '집', tagClass: 'root', hint: '사람이 사는 공간과 관련된 어근', targetWord: '집', position: 'any', validAnswers: ['꽃집', '빈집', '시골집', '돌집', '외갓집', '집안', '기와집'] },
-      { type: '접사', word: '민-', tagClass: 'affix', hint: '‘꾸밈이나 꾸밈새가 없는’ (접두사)', targetWord: '민', position: 'start', validAnswers: ['민소매', '민머리', '민낯', '민몸', '민판'] },
-      { type: '접사', word: '-꾸러기', tagClass: 'affix', hint: '‘그것이 심한 사람’ (접미사)', targetWord: '꾸러기', position: 'end', validAnswers: ['장난꾸러기', '심술꾸러기', '잠꾸러기', '걱정꾸러기', '욕심꾸러기'] },
-      { type: '어근', word: '길', tagClass: 'root', hint: '사람이나 차가 다니는 공간 어근', targetWord: '길', position: 'any', validAnswers: ['꽃길', '돌길', '꿈길', '눈길', '산길', '골목길', '지름길'] },
-      { type: '접사', word: '생-', tagClass: 'affix', hint: '‘익히지 않은’ 또는 ‘가공하지 않은’ (접두사)', targetWord: '생', position: 'start', validAnswers: ['생쌀', '생고기', '생나무', '생맥주', '생라면'] },
-      { type: '접사', word: '-되다', tagClass: 'affix', hint: '피동이나 상태 변화를 나타내는 접미사', targetWord: '되다', position: 'end', validAnswers: ['거짓되다', '참되다', '영광되다', '복되다'] },
-      { type: '어근', word: '눈', tagClass: 'root', hint: '하늘에서 내리는 눈 관련 어근', targetWord: '눈', position: 'any', validAnswers: ['눈꽃', '눈사람', '눈길', '함박눈', '진눈깨비', '눈보라'] },
-      { type: '접사', word: '시-', tagClass: 'affix', hint: '‘시어머니 계통’을 나타내는 접두사', targetWord: '시', position: 'start', validAnswers: ['시어머니', '시아버지', '시댁', '시누이', '시동생'] },
-      { type: '접사', word: '-롭다', tagClass: 'affix', hint: '형용사를 만들어 주는 접미사', targetWord: '롭다', position: 'end', validAnswers: ['슬기롭다', '이롭다', '지혜롭다', '향기롭다', '신비롭다'] },
-      { type: '어근', word: '산', tagClass: 'root', hint: '높이 솟은 자연과 관련된 어근', targetWord: '산', position: 'any', validAnswers: ['산길', '산새', '돌산', '흙산', '산울림', '산꽃', '산골'] },
-      { type: '접사', word: '첫-', tagClass: 'affix', hint: '‘맨 처음의’ 뜻을 더하는 접두사', targetWord: '첫', position: 'start', validAnswers: ['첫사랑', '첫눈', '첫인상', '첫날', '첫걸음', '첫마중'] },
-      { type: '접사', word: '-스럽다', tagClass: 'affix', hint: '그러한 성질이 있음을 뜻하는 접미사', targetWord: '스럽다', position: 'end', validAnswers: ['자랑스럽다', '사랑스럽다', '조심스럽다', '어른스럽다', '걱정스럽다'] },
-      { type: '어근', word: '새', tagClass: 'root', hint: '하늘을 나는 동물과 관련된 어근', targetWord: '새', position: 'any', validAnswers: ['산새', '물새', '알새', '들새', '새장', '새소리', '참새'] },
-      { type: '접사', word: '외-', tagClass: 'affix', hint: '‘혼자인’ 또는 ‘어머니 계통의’ (접두사)', targetWord: '외', position: 'start', validAnswers: ['외나무다리', '외길', '외할머니', '외갓집', '외아들', '외딸'] },
-      { type: '접사', word: '-치기', tagClass: 'affix', hint: '‘치거나 두드리는 행위’ (접미사)', targetWord: '치기', position: 'end', validAnswers: ['제기치기', '딱지치기', '헤엄치기', '손뼉치기', '기차치기'] },
-      { type: '어근', word: '비', tagClass: 'root', hint: '하늘에서 내리는 비 관련 어근', targetWord: '비', position: 'any', validAnswers: ['꽃비', '단비', '봄비', '여름비', '빗물', '빗소리', '소나기'] },
-      { type: '접사', word: '되-', tagClass: 'affix', hint: '‘다시’의 뜻을 더하는 접두사', targetWord: '되', position: 'start', validAnswers: ['되풀이', '되새김', '되돌아보다', '되찾다', '되짚다'] },
-      { type: '접사', word: '-질하다', tagClass: 'affix', hint: '동작을 연속하여 함을 나타내는 접미사', targetWord: '질하다', position: 'end', validAnswers: ['부채질하다', '가위질하다', '걸레질하다', '다리미질하다', '장난질하다'] },
-      { type: '어근', word: '밥', tagClass: 'root', hint: '음식 및 식사와 관련된 어근', targetWord: '밥', position: 'any', validAnswers: ['쌀밥', '보리밥', '볶음밥', '주먹밥', '비빔밥', '찬밥', '덮밥'] },
-      { type: '접사', word: '소-', tagClass: 'affix', hint: '‘자잘한’의 뜻을 더하는 접두사', targetWord: '소', position: 'start', validAnswers: ['소나무', '소형', '소규모', '소협곡', '소극장'] },
-      { type: '접사', word: '-짓', tagClass: 'affix', hint: '‘신체 동작이나 행동’ (접미사)', targetWord: '짓', position: 'end', validAnswers: ['몸짓', '손짓', '발짓', '눈짓', '몸뚱이짓'] },
-      { type: '어근', word: '나무', tagClass: 'root', hint: '식물 및 목재와 관련된 실질적 어근', targetWord: '나무', position: 'any', validAnswers: ['꿈나무', '참나무', '대나무', '소나무', '단풍나무', '나무꾼', '느티나무', '나무토막', '나무상자', '나무젓가락'] }
+      {
+        type: '접사', word: '햇-', tagClass: 'affix', hint: '‘당해에 새로 난’의 뜻을 더함 (접두사)', targetWord: '햇', altWord: '해', position: 'start',
+        dict: {
+          '햇밤': '그해에 새로 난 밤',
+          '햇곡식': '그해에 새로 난 곡식',
+          '햇과일': '그해에 새로 난 과일',
+          '햇쌀': '그해에 새로 수확한 쌀',
+          '햇감자': '그해에 새로 난 감자',
+          '햇고구마': '그해에 새로 난 고구마',
+          '햇보리': '그해에 새로 수확한 보리',
+          '햇마늘': '그해에 새로 난 마늘',
+          '햇양파': '그해에 새로 난 양파',
+          '해돋이': '아침에 해가 떠오르는 일',
+          '해쑥': '그해에 새로 난 쑥'
+        }
+      },
+      {
+        type: '어근', word: '불', tagClass: 'root', hint: '뜨거운 불과 관련된 실질적 어근', targetWord: '불', position: 'any',
+        dict: {
+          '불꽃': '타오르는 불의 혀처럼 생기는 빛의 기둥',
+          '불장난': '불을 가지고 하는 위험한 놀이',
+          '불씨': '불을 붙이는 근원이 되는 물질',
+          '불꽃놀이': '화약을 터뜨려 밤하늘에 빛을 만드는 놀이',
+          '횃불': '자루 끝에 헝겊을 감아 불을 붙인 것',
+          '등불': '등잔이나 등기구에 켜 놓은 불',
+          '들불': '들판에 일어나는 불',
+          '불고기': '쇠고기나 돼지고기를 양념하여 구운 음식',
+          '불조심': '불이 나지 않도록 조심함',
+          '불지름': '불을 지르는 행위'
+        }
+      },
+      {
+        type: '접사', word: '풋-', tagClass: 'affix', hint: '‘덜 익은’의 뜻을 더함 (접두사)', targetWord: '풋', position: 'start',
+        dict: {
+          '풋사랑': '어리고 순진한 마음으로 하는 사랑',
+          '풋과일': '채 익지 아니한 과일',
+          '풋사과': '채 익지 아니한 푸른 사과',
+          '풋고추': '채 익지 아니한 푸른 고추',
+          '풋나물': '이른 봄에 새로 자라 나온 나물',
+          '풋잠': '깊이 들지 못한 잠'
+        }
+      },
+      {
+        type: '어근', word: '물', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 실질적 어근', targetWord: '물', position: 'any',
+        dict: {
+          '샘물': '샘에서 솟아 나오는 물',
+          '물개': '바다에 사는 바다표범과의 포유류',
+          '먹물': '먹을 갈아서 만든 검은 물',
+          '물통': '물 담는 통',
+          '눈물': '눈에서 나오는 액체',
+          '물방울': '동그랗게 뭉쳐진 물 알갱이'
+        }
+      },
+      {
+        type: '접사', word: '-꾼', tagClass: 'affix', hint: '‘어떤 일을 전문적/습관적으로 하는 사람’ (접미사)', targetWord: '꾼', position: 'end',
+        dict: {
+          '누리꾼': '인터넷을 이용하는 사람 (네티즌)',
+          '사냥꾼': '사냥을 전문으로 하는 사람',
+          '장난꾼': '장난을 좋아하는 사람',
+          '구경꾼': '구경하는 사람',
+          '낚시꾼': '낚시질을 전문이나 취미로 하는 사람',
+          '일꾼': '일을 맡아 하는 사람'
+        }
+      },
+      {
+        type: '접사', word: '-쟁이', tagClass: 'affix', hint: '‘그 속성을 유난히 많이 지닌 사람’ (접미사)', targetWord: '쟁이', position: 'end',
+        dict: {
+          '방귀쟁이': '방귀를 자주 뀌는 사람',
+          '고집쟁이': '고집이 매우 센 사람',
+          '멋쟁이': '멋을 잘 내는 사람',
+          '겁쟁이': '겁이 많은 사람',
+          '수다쟁이': '수다가 심한 사람'
+        }
+      },
+      {
+        type: '어근', word: '꿈', tagClass: 'root', hint: '다른 어근과 결합하여 합성어를 만드는 어근', targetWord: '꿈', position: 'any',
+        dict: {
+          '꿈길': '꿈속에서 다니는 길',
+          '꿈나무': '장래에 훌륭하게 될 유망주',
+          '꿈결': '꿈을 꾸는 동안',
+          '꿈나라': '꿈속의 환상적인 세계',
+          '돼지꿈': '돼지가 나오는 복된 꿈'
+        }
+      },
+      {
+        type: '접사', word: '홑-', tagClass: 'affix', hint: '‘한 겹으로 된’ 또는 ‘하나인’ (접두사)', targetWord: '홑', position: 'start',
+        dict: {
+          '홑이불': '겹으로 되지 않고 한 겹으로 된 이불',
+          '홑잎': '한 자루에 한 개씩 붙는 잎',
+          '홑옷': '겹옷이나 솜옷이 아닌 한 겹으로 된 옷'
+        }
+      },
+      {
+        type: '접사', word: '-질', tagClass: 'affix', hint: '‘도구를 사용하는 동작이나 일 또는 행동’ (접미사)', targetWord: '질', position: 'end',
+        dict: {
+          '부채질': '부채를 흔들어 바람을 일으키는 일',
+          '가위질': '가위로 물건을 자르는 일',
+          '걸레질': '걸레로 방이나 물건을 닦는 일',
+          '다리미질': '다리미로 옷을 다리는 일',
+          '숟가락질': '숟가락으로 음식을 먹는 행동',
+          '장난질': '남을 속이거나 모해하려는 짓'
+        }
+      },
+      {
+        type: '접사', word: '잔-', tagClass: 'affix', hint: '‘가느다란’ 또는 ‘자잘한’ (접두사)', targetWord: '잔', position: 'start',
+        dict: {
+          '잔가지': '가늘고 자잘하게 갈라진 가지',
+          '잔가시': '가늘고 자잘한 가시',
+          '잔머리': '자잘하게 꾀를 쓰는 머리',
+          '잔주름': '자잘하게 잡힌 주름',
+          '잔돈': '액수가 적은 돈'
+        }
+      },
+      {
+        type: '어근', word: '꽃', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 어근', targetWord: '꽃', position: 'any',
+        dict: {
+          '꽃집': '꽃을 파는 가게',
+          '나팔꽃': '나팔 모양으로 피는 꽃',
+          '꽃비': '꽃잎처럼 흩날려 내리는 비',
+          '불꽃': '타오르는 불의 기둥',
+          '눈꽃': '나뭇가지 따위에 눈이 하얗게 덮인 것'
+        }
+      },
+      {
+        type: '접사', word: '군-', tagClass: 'affix', hint: '‘쓸데없는’ 또는 ‘가선의’ (접두사)', targetWord: '군', position: 'start',
+        dict: {
+          '군소리': '하지 않아도 될 쓸데없는 말',
+          '군살': '쓸데없이 찐 살',
+          '군식구': '정식 식구 외의 덧붙은 식구',
+          '군말': '쓸데없는 덧말'
+        }
+      },
+      {
+        type: '접사', word: '-보', tagClass: 'affix', hint: '‘그것이 심하거나 많은 사람’ (접미사)', targetWord: '보', position: 'end',
+        dict: {
+          '울보': '잘 우는 아이나 사람',
+          '먹보': '음식을 탐나게 많이 먹는 사람',
+          '잠보': '잠이 많은 사람',
+          '겁보': '겁이 많은 사람'
+        }
+      },
+      {
+        type: '어근', word: '돌', tagClass: 'root', hint: '다른 어근과 결합하는 단단한 어근', targetWord: '돌', position: 'any',
+        dict: {
+          '돌다리': '돌로 쌓아 만든 다리',
+          '돌담': '돌로 쌓은 담',
+          '돌산': '돌이 많은 산',
+          '돌탑': '돌을 쌓아 만든 탑'
+        }
+      },
+      {
+        type: '접사', word: '날-', tagClass: 'affix', hint: '‘가공하지 않은’의 뜻을 더함 (접두사)', targetWord: '날', position: 'start',
+        dict: {
+          '날고기': '익히지 아니한 고기',
+          '날것': '익히거나 가공하지 않은 음식물',
+          '날계란': '익히지 않은 날달걀'
+        }
+      },
+      {
+        type: '접사', word: '-님', tagClass: 'affix', hint: '‘높임’의 뜻을 더함 (접미사)', targetWord: '님', position: 'end',
+        dict: {
+          '선생님': '학생을 가르치는 사람을 높여 부르는 말',
+          '달님': '‘달’을 높여 부르는 말',
+          '해님': '‘해’를 높여 부르는 말'
+        }
+      },
+      {
+        type: '어근', word: '손', tagClass: 'root', hint: '신체 부위와 관련된 실질적 어근', targetWord: '손', position: 'any',
+        dict: {
+          '손수건': '손을 닦거나 땀을 닦는 작은 수건',
+          '손수레': '손으로 미는 작은 수레',
+          '손짓': '손을 움직여 어떤 뜻을 나타내는 일',
+          '손목': '손과 팔이 이어지는 부분'
+        }
+      },
+      {
+        type: '접사', word: '맨-', tagClass: 'affix', hint: '‘다른 것이 없는’의 뜻을 더함 (접두사)', targetWord: '맨', position: 'start',
+        dict: {
+          '맨손': '장갑 등을 끼지 않은 빈 손',
+          '맨발': '신이나 양말을 신지 않은 발',
+          '맨땅': '아무것도 없는 맨 바닥'
+        }
+      },
+      {
+        type: '접사', word: '참-', tagClass: 'affix', hint: '‘진짜의’ 또는 ‘품질이 좋은’ (접두사)', targetWord: '참', position: 'start',
+        dict: {
+          '참꽃': '진달래꽃을 달리 이르는 말',
+          '참기름': '참깨를 볶아서 짜낸 기름',
+          '참사랑': '순수하고 진실된 사랑',
+          '참나무': '참나무과의 낙엽 교목'
+        }
+      },
+      {
+        type: '어근', word: '해', tagClass: 'root', hint: '하늘에 떠 있는 태양 관련 어근', targetWord: '해', position: 'any',
+        dict: {
+          '해돋이': '아침에 해가 떠오르는 일',
+          '해살': '해가 쏘아 나타나는 빛',
+          '해맞이': '새해에 해를 맞이하는 일'
+        }
+      },
+      {
+        type: '접사', word: '-개', tagClass: 'affix', hint: '‘도구’나 ‘사람’을 나타냄 (접미사)', targetWord: '개', position: 'end',
+        dict: {
+          '지우개': '글씨를 지우는 도구',
+          '날개': '새나 곤충의 몸에 붙어 날게 하는 부분',
+          '덮개': '물건을 덮는 물건'
+        }
+      },
+      {
+        type: '어근', word: '나무', tagClass: 'root', hint: '식물 및 목재와 관련된 실질적 어근', targetWord: '나무', position: 'any',
+        dict: {
+          '꿈나무': '장래에 훌륭하게 될 유망주',
+          '참나무': '진짜 유용한 나무',
+          '소나무': '바늘 모양 잎을 가진 상록수',
+          '나무토막': '나무를 잘라 낸 조각',
+          '나무상자': '나무로 만든 상자'
+        }
+      }
     ];
 
-    // 제외할 고유명사/신조어/인터넷 용어 필터 목록
     const BANNED_TERMS = ['위키', '닷컴', '게임', '채널', '나무위키', '유튜브'];
 
     let quizData = [];
@@ -387,7 +571,7 @@
       
       userInputEl.value = '';
       userInputEl.focus();
-      messageEl.textContent = '';
+      messageEl.innerHTML = '';
       messageEl.className = 'message-area';
       wordCardEl.className = 'word-card';
       isProcessing = false;
@@ -408,19 +592,20 @@
     }
 
     function checkMorphologyRule(q, inputVal) {
-      // 1. 금지어(신조어/고유명사) 필터링
-      if (BANNED_TERMS.some(term => inputVal.includes(term))) {
-        return false;
-      }
+      if (BANNED_TERMS.some(term => inputVal.includes(term))) return false;
 
-      // 2. 제시어 결합 위치 필터링
+      const target = q.targetWord;
+      const alt = q.altWord;
+
       if (q.position === 'start') {
-        return inputVal.startsWith(q.targetWord) && inputVal.length > q.targetWord.length;
+        const validStart = inputVal.startsWith(target) || (alt && inputVal.startsWith(alt));
+        return validStart && inputVal.length > target.length;
       } else if (q.position === 'end') {
-        return inputVal.endsWith(q.targetWord) && inputVal.length > q.targetWord.length;
+        const validEnd = inputVal.endsWith(target) || (alt && inputVal.endsWith(alt));
+        return validEnd && inputVal.length > target.length;
       } else {
-        // 'any' 위치인 경우, 제시어와 정확히 같지 않고 제시어를 포함하는 파생어/합성어여야 함
-        return inputVal.includes(q.targetWord) && inputVal.length > q.targetWord.length;
+        const validAny = inputVal.includes(target) || (alt && inputVal.includes(alt));
+        return validAny && inputVal.length > target.length;
       }
     }
 
@@ -431,29 +616,35 @@
       try {
         const inputVal = userInputEl.value.trim().replace(/\s+/g, '');
         if (!inputVal) {
-          showMessage('단어를 입력해 주세요!', 'msg-incorrect');
+          showMessage('단어를 입력해 주세요!', '', 'msg-incorrect');
           return;
         }
 
         const q = quizData[currentIndex];
 
-        // 어근/접사 결합 검사 (나무위키 등 제외)
         if (!checkMorphologyRule(q, inputVal)) {
           wordCardEl.classList.add('incorrect-anim');
-          showMessage(`제시어 '${q.targetWord}'이(가) 포함된 올바른 국어 단어가 아니에요!`, 'msg-incorrect');
+          showMessage(`제시어 '${q.targetWord}'이(가) 올바르게 결합한 단어가 아니에요!`, '', 'msg-incorrect');
           setTimeout(() => wordCardEl.classList.remove('incorrect-anim'), 400);
           return;
         }
 
-        // 내장 데이터베이스 검사
-        let isCorrect = q.validAnswers.some(ans => ans.replace(/\s+/g, '') === inputVal);
+        let isCorrect = false;
+        let wordMeaning = '';
 
-        // 내장 목록에 없는 일반 국어 단어는 실시간 사전 검색
+        // 1. 내장 사전 DB 검사
+        if (q.dict && q.dict[inputVal]) {
+          isCorrect = true;
+          wordMeaning = q.dict[inputVal];
+        }
+
+        // 2. 외부 오픈 사전 API 실시간 검사
         if (!isCorrect) {
-          showMessage('🔍 사전에 등재된 단어인지 확인 중...', 'msg-info');
+          showMessage('🔍 사전에 등재된 단어인지 확인 중...', '', 'msg-info');
           const isDictValid = await verifyWithOpenDictAPI(inputVal);
           if (isDictValid) {
             isCorrect = true;
+            wordMeaning = `'${inputVal}'(은)는 사전에 등재된 올바른 표준어입니다.`;
           }
         }
 
@@ -462,7 +653,8 @@
           scoreCountEl.textContent = `점수: ${score}점`;
           
           wordCardEl.classList.add('correct-anim');
-          showMessage('정답입니다! 🎉 사전에 등록된 올바른 단어입니다!', 'msg-correct');
+          const meaningTxt = wordMeaning ? `📘 [단어 뜻] "${wordMeaning}"` : '';
+          showMessage('정답입니다! 🎉', meaningTxt, 'msg-correct');
 
           setTimeout(() => {
             currentIndex++;
@@ -471,24 +663,27 @@
             } else {
               showClearScreen();
             }
-          }, 1200);
+          }, 1600);
 
         } else {
           wordCardEl.classList.add('incorrect-anim');
-          showMessage('사전에 등록된 표준어 단어가 아니거나 단어 구조에 맞지 않아요!', 'msg-incorrect');
+          showMessage('사전에 등록된 표준어 단어가 아니거나 단어 구조에 맞지 않아요!', '', 'msg-incorrect');
 
           setTimeout(() => {
             wordCardEl.classList.remove('incorrect-anim');
           }, 400);
         }
       } finally {
-        setTimeout(() => { isProcessing = false; }, 500);
+        setTimeout(() => { isProcessing = false; }, 600);
       }
     }
 
-    function showMessage(text, className) {
-      messageEl.textContent = text;
-      messageEl.className = `message-area ${className}`;
+    function showMessage(mainText, subText, className) {
+      let html = `<div class="msg-main ${className}">${mainText}</div>`;
+      if (subText) {
+        html += `<div class="msg-meaning">${subText}</div>`;
+      }
+      messageEl.innerHTML = html;
     }
 
     function showClearScreen() {
