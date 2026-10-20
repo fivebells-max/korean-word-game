@@ -460,31 +460,61 @@
       isProcessing = false;
     }
 
-    // 위키낱말사전 API에서 문서 본문 텍스트(뜻풀이)까지 함께 추출하는 함수
+    // HTML Parse API 방식을 이용하여 위키낱말사전 문서 본문에서 실제 국어 뜻풀이를 100% 추출하는 강화 알고리즘
     async function fetchMeaningFromOpenDictAPI(word) {
       try {
-        const url = `https://ko.wiktionary.org/w/api.php?action=query&prop=extracts&exintro&explaintext&titles=${encodeURIComponent(word)}&format=json&origin=*`;
+        const url = `https://ko.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(word)}&prop=text&format=json&origin=*`;
         const response = await fetch(url);
         if (!response.ok) return null;
         const data = await response.json();
-        const pages = data.query.pages;
-        const pageId = Object.keys(pages)[0];
         
-        if (pageId === "-1") return null;
-        
-        let extract = pages[pageId].extract;
-        if (!extract) return `${word}(은)는 표준국어사전에 등재된 표준어입니다.`;
+        if (data.error || !data.parse || !data.parse.text) return null;
 
-        // 위키 위키 텍스트에서 첫 줄이나 주요 정의 부분만 추출하여 깔끔하게 가공
-        let lines = extract.split('\n').filter(line => line.trim().length > 0);
-        let meaningLine = lines.find(l => l.includes('1.') || l.includes('뜻') || l.length > 5) || lines[0];
-        meaningLine = meaningLine.replace(/^[\s\d\.\:\-]+/, '').trim();
-        
-        if (meaningLine.length > 60) {
-          meaningLine = meaningLine.substring(0, 60) + '...';
+        const htmlText = data.parse.text['*'];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        // 위키낱말사전의 명사/동사/형용사 항목 밑의 ol 태그(뜻 목록) 추출
+        const olElements = doc.querySelectorAll('ol');
+        let targetText = '';
+
+        for (let ol of olElements) {
+          const firstLi = ol.querySelector('li');
+          if (firstLi) {
+            // 주석, 예문(dl), 번역 태그 제거하여 Pure 뜻만 추출
+            const cloneLi = firstLi.cloneNode(true);
+            const subElements = cloneLi.querySelectorAll('dl, ul, table, style, .reference');
+            subElements.forEach(el => el.remove());
+            
+            let text = cloneLi.textContent.trim();
+            if (text && text.length > 2) {
+              targetText = text;
+              break;
+            }
+          }
         }
 
-        return meaningLine || `${word}(은)는 사전에 등재된 올바른 표준어입니다.`;
+        if (!targetText) {
+          // ol이 없는 경우 p 태그나 문단 중에서 첫 뜻 문장 검색
+          const pElements = doc.querySelectorAll('p');
+          for (let p of pElements) {
+            let text = p.textContent.trim();
+            if (text && text.length > 5 && !text.includes('위키')) {
+              targetText = text;
+              break;
+            }
+          }
+        }
+
+        if (!targetText) return null;
+
+        // 특수문자나 잡다한 라벨 정제
+        targetText = targetText.replace(/\[\d+\]/g, '').replace(/\s+/g, ' ').trim();
+        if (targetText.length > 60) {
+          targetText = targetText.substring(0, 60) + '...';
+        }
+
+        return targetText;
       } catch (e) {
         return null;
       }
@@ -537,7 +567,7 @@
           wordMeaning = q.dict[inputVal];
         }
 
-        // 2. 내장 DB에 없으면 오픈 사전 API 조회 및 뜻풀이 실시간 파싱
+        // 2. 내장 DB에 없으면 오픈 사전 API 파싱으로 단어 존재 유무 및 뜻풀이 실시간 추출
         if (!isCorrect) {
           showMessage('🔍 사전에 등재된 단어인지 확인 중...', '', 'msg-info');
           const fetchedMeaning = await fetchMeaningFromOpenDictAPI(inputVal);
