@@ -297,7 +297,6 @@
   </div>
 
   <script>
-    // 총 100개의 대용량 교과서 연계 문제 은행
     const questionBank = [
       { type: '접사', word: '햇-', tagClass: 'affix', hint: '‘당해에 새로 난’의 뜻을 더함 (접두사)', targetWord: '햇', altWord: '해', position: 'start', dict: { '햇밤': '그해에 새로 난 밤', '햇곡식': '그해에 새로 난 곡식', '햇과일': '그해에 새로 난 과일', '햇쌀': '그해에 새로 수확한 쌀', '햇감자': '그해에 새로 난 감자', '해돋이': '아침에 해가 떠오르는 일' } },
       { type: '어근', word: '불', tagClass: 'root', hint: '뜨거운 불과 관련된 실질적 어근', targetWord: '불', position: 'any', dict: { '불꽃': '타오르는 불의 혀처럼 생기는 빛의 기둥', '불장난': '불을 가지고 하는 위험한 놀이', '불씨': '불을 붙이는 근원이 되는 물질', '불꽃놀이': '화약을 터뜨려 밤하늘에 빛을 만드는 놀이', '불고기': '쇠고기나 돼지고기를 양념하여 구운 음식' } },
@@ -374,7 +373,7 @@
       { type: '접사', word: '외-', tagClass: 'affix', hint: '‘혼자인’의 뜻을 더하는 접두사', targetWord: '외', position: 'start', dict: { '외길': '외딴 하나의 길', '외아들': '하나뿐인 아들', '외딸': '하나뿐인 딸' } },
       { type: '어근', word: '달', tagClass: 'root', hint: '밤하늘의 달 관련 어근', targetWord: '달', position: 'any', dict: { '달님': '달을 높여 부르는 말', '달맞이': '달을 맞아 비는 일', '달빛': '달의 빛' } },
       { type: '접사', word: '-대다', tagClass: 'affix', hint: '동작이 심하게 반복됨을 나타내는 접미사', targetWord: '대다', position: 'end', dict: { '출렁대다': '물결이 심하게 흔들리다', '소리치대다': '계속 소리치다', '웅성대다': '사람들이 모여 소란스럽다' } },
-      { type: '어근', word: '빛', tagClass: 'root', hint: '광선 및 색상 관련 어근', targetWord: '빛', position: 'any', dict: { '햇빛': '해의 빛', '달빛': '달의 빛', '불빛': '불의 빛' } },
+      { type: '어근', word: '빛', tagClass: 'root', hint: '색깔 및 광선 어근', targetWord: '빛', position: 'any', dict: { '햇빛': '해의 빛', '달빛': '달의 빛', '불빛': '불의 빛' } },
       { type: '접사', word: '홀-', tagClass: 'affix', hint: '‘짝이 없는’ 뜻을 더하는 접두사', targetWord: '홀', position: 'start', dict: { '홀몸': '배우자가 없는 몸', '홀시아머니': '남편의 홀어머니', '홀아비': '아내를 잃은 남자' } },
       { type: '어근', word: '몸', tagClass: 'root', hint: '신체 관련 실질적 어근', targetWord: '몸', position: 'any', dict: { '맨몸': '아무것도 입지 않은 몸', '몸짓': '몸을 움직이는 동작', '몸매': '몸의 형태' } },
       { type: '접사', word: '-가락', tagClass: 'affix', hint: '‘가늘고 긴 토막’ (접미사)', targetWord: '가락', position: 'end', dict: { '손가락': '손의 가락', '발가락': '발의 가락', '엿가락': '엿의 가락' } },
@@ -461,17 +460,33 @@
       isProcessing = false;
     }
 
-    async function verifyWithOpenDictAPI(word) {
+    // 위키낱말사전 API에서 문서 본문 텍스트(뜻풀이)까지 함께 추출하는 함수
+    async function fetchMeaningFromOpenDictAPI(word) {
       try {
-        const url = `https://ko.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&format=json&origin=*`;
+        const url = `https://ko.wiktionary.org/w/api.php?action=query&prop=extracts&exintro&explaintext&titles=${encodeURIComponent(word)}&format=json&origin=*`;
         const response = await fetch(url);
-        if (!response.ok) return false;
+        if (!response.ok) return null;
         const data = await response.json();
         const pages = data.query.pages;
         const pageId = Object.keys(pages)[0];
-        return pageId !== "-1";
+        
+        if (pageId === "-1") return null;
+        
+        let extract = pages[pageId].extract;
+        if (!extract) return `${word}(은)는 표준국어사전에 등재된 표준어입니다.`;
+
+        // 위키 위키 텍스트에서 첫 줄이나 주요 정의 부분만 추출하여 깔끔하게 가공
+        let lines = extract.split('\n').filter(line => line.trim().length > 0);
+        let meaningLine = lines.find(l => l.includes('1.') || l.includes('뜻') || l.length > 5) || lines[0];
+        meaningLine = meaningLine.replace(/^[\s\d\.\:\-]+/, '').trim();
+        
+        if (meaningLine.length > 60) {
+          meaningLine = meaningLine.substring(0, 60) + '...';
+        }
+
+        return meaningLine || `${word}(은)는 사전에 등재된 올바른 표준어입니다.`;
       } catch (e) {
-        return false;
+        return null;
       }
     }
 
@@ -516,17 +531,19 @@
         let isCorrect = false;
         let wordMeaning = '';
 
+        // 1. 내장 사전 DB에서 정답 및 뜻풀이 확인
         if (q.dict && q.dict[inputVal]) {
           isCorrect = true;
           wordMeaning = q.dict[inputVal];
         }
 
+        // 2. 내장 DB에 없으면 오픈 사전 API 조회 및 뜻풀이 실시간 파싱
         if (!isCorrect) {
           showMessage('🔍 사전에 등재된 단어인지 확인 중...', '', 'msg-info');
-          const isDictValid = await verifyWithOpenDictAPI(inputVal);
-          if (isDictValid) {
+          const fetchedMeaning = await fetchMeaningFromOpenDictAPI(inputVal);
+          if (fetchedMeaning !== null) {
             isCorrect = true;
-            wordMeaning = `'${inputVal}'(은)는 표준국어사전에 등록된 표준어 단어입니다.`;
+            wordMeaning = fetchedMeaning;
           }
         }
 
@@ -535,7 +552,7 @@
           scoreCountEl.textContent = `점수: ${score}점`;
           
           wordCardEl.classList.add('correct-anim');
-          const meaningTxt = wordMeaning ? `📘 [사전 뜻] "${wordMeaning}"` : `📘 [사전 뜻] "${inputVal}"(은)는 국어사전에 등재된 표준어입니다.`;
+          const meaningTxt = `📘 [사전 뜻] "${wordMeaning}"`;
           showMessage('정답입니다! 🎉', meaningTxt, 'msg-correct');
 
           setTimeout(() => {
@@ -545,7 +562,7 @@
             } else {
               showClearScreen();
             }
-          }, 2200);
+          }, 2400);
 
         } else {
           wordCardEl.classList.add('incorrect-anim');
