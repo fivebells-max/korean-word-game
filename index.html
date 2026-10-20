@@ -279,7 +279,6 @@
   </div>
 
   <script>
-    // 50문항 확장 및 정답 데이터베이스 보완
     const questionBank = [
       { type: '접사', word: '풋-', tagClass: 'affix', hint: '‘덜 익은’의 뜻을 더함 (접두사)', targetWord: '풋', position: 'start', validAnswers: ['풋사랑', '풋과일', '풋사과', '풋고추', '풋나물', '풋잠', '풋낯', '풋바둑'] },
       { type: '어근', word: '물', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 실질적 어근', targetWord: '물', position: 'any', validAnswers: ['샘물', '물개', '먹물', '물통', '물병', '눈물', '물수제비', '물걸레', '수돗물', '물구름', '물안개', '물약'] },
@@ -288,7 +287,7 @@
       { type: '접사', word: '-쟁이', tagClass: 'affix', hint: '‘그 속성을 유난히 많이 지닌 사람’ (접미사)', targetWord: '쟁이', position: 'end', validAnswers: ['방귀쟁이', '고집쟁이', '멋쟁이', '겁쟁이', '수다쟁이', '떼쟁이', '개구쟁이', '욕심쟁이', '변덕쟁이'] },
       { type: '어근', word: '꿈', tagClass: 'root', hint: '다른 어근과 결합하여 합성어를 만드는 어근', targetWord: '꿈', position: 'any', validAnswers: ['꿈길', '꿈나무', '꿈결', '꿈나라', '꿈자리', '돼지꿈', '첫꿈', '꿈속'] },
       { type: '접사', word: '홑-', tagClass: 'affix', hint: '‘한 겹으로 된’ 또는 ‘하나인’ (접두사)', targetWord: '홑', position: 'start', validAnswers: ['홑이불', '홑잎', '홑옷', '홑문', '홑몸', '홑소리', '홑문장'] },
-      { type: '접사', word: '-질', tagClass: 'affix', hint: '‘도구를 사용하는 동작이나 일 또는 행동’ (접미사)', targetWord: '질', position: 'end', validAnswers: ['부채질', '가위질', '걸레질', '다리미질', '숟가락질', '붓질', '칼질', '장난질', '주먹질', '손가락질', '도끼질', '질부채'] },
+      { type: '접사', word: '-질', tagClass: 'affix', hint: '‘도구를 사용하는 동작이나 일 또는 행동’ (접미사)', targetWord: '질', position: 'end', validAnswers: ['부채질', '가위질', '걸레질', '다리미질', '숟가락질', '붓질', '칼질', '장난질', '주먹질', '손가락질', '도끼질'] },
       { type: '접사', word: '잔-', tagClass: 'affix', hint: '‘가느다란’ 또는 ‘자잘한’ (접두사)', targetWord: '잔', position: 'start', validAnswers: ['잔가지', '잔가시', '잔머리', '잔주름', '잔돈', '잔심부름', '잔정', '잔파'] },
       { type: '어근', word: '꽃', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 어근', targetWord: '꽃', position: 'any', validAnswers: ['꽃집', '나팔꽃', '꽃비', '불꽃', '눈꽃', '들꽃', '제비꽃', '꽃밭', '꽃다발'] },
       { type: '접사', word: '군-', tagClass: 'affix', hint: '‘쓸데없는’ 또는 ‘가선의’ (접두사)', targetWord: '군', position: 'start', validAnswers: ['군소리', '군살', '군식구', '군말', '군손질', '군눈', '군침'] },
@@ -300,7 +299,7 @@
       { type: '접사', word: '맨-', tagClass: 'affix', hint: '‘다른 것이 없는’의 뜻을 더함 (접두사)', targetWord: '맨', position: 'start', validAnswers: ['맨손', '맨발', '맨땅', '맨얼굴', '맨입', '맨몸'] },
       { type: '접사', word: '참-', tagClass: 'affix', hint: '‘진짜의’ 또는 ‘품질이 좋은’ (접두사)', targetWord: '참', position: 'start', validAnswers: ['참꽃', '참기름', '참사랑', '참나무', '참말', '참새'] },
       { type: '어근', word: '해', tagClass: 'root', hint: '하늘에 떠 있는 태양 관련 어근', targetWord: '해', position: 'any', validAnswers: ['해돋이', '해살', '해맞이', '햇빛', '해질녘', '해오름'] },
-      { type: '접사', word: '-개', tagClass: 'affix', hint: '‘도구’나 ‘사람’을 나타냄 (접미사)', targetWord: '개', position: 'end', validAnswers: ['지우개', '날개', '덮개', '집게', '지게', '베개', '지우개'] },
+      { type: '접사', word: '-개', tagClass: 'affix', hint: '‘도구’나 ‘사람’을 나타냄 (접미사)', targetWord: '개', position: 'end', validAnswers: ['지우개', '날개', '덮개', '집게', '지게', '베개'] },
       { type: '접사', word: '강-', tagClass: 'affix', hint: '‘다른 것이 섞이지 않은’ (접두사)', targetWord: '강', position: 'start', validAnswers: ['강굴', '강술', '강풀', '강주먹', '강호령'] },
       { type: '접사', word: '-막이', tagClass: 'affix', hint: '‘막는 물건이나 일’ (접미사)', targetWord: '막이', position: 'end', validAnswers: ['바람막이', '물막이', '눈막이', '비막이', '총알막이'] },
       { type: '어근', word: '불', tagClass: 'root', hint: '뜨거운 불과 관련된 실질적 어근', targetWord: '불', position: 'any', validAnswers: ['불꽃', '불씨', '불꽃놀이', '횃불', '등불', '들불', '불자국'] },
@@ -315,7 +314,7 @@
       { type: '어근', word: '길', tagClass: 'root', hint: '사람이나 차가 다니는 공간 어근', targetWord: '길', position: 'any', validAnswers: ['꽃길', '돌길', '꿈길', '눈길', '산길', '골목길', '지름길'] },
       { type: '접사', word: '생-', tagClass: 'affix', hint: '‘익히지 않은’ 또는 ‘가공하지 않은’ (접두사)', targetWord: '생', position: 'start', validAnswers: ['생쌀', '생고기', '생나무', '생맥주', '생라면'] },
       { type: '접사', word: '-되다', tagClass: 'affix', hint: '피동이나 상태 변화를 나타내는 접미사', targetWord: '되다', position: 'end', validAnswers: ['거짓되다', '참되다', '영광되다', '복되다'] },
-      { type: '어근', word: '눈', tagClass: 'root', hint: '하늘에서 내리는 눈 관련 어근', targetWord: '눈', position: 'any', validAnswers: ['눈꽃', '눈사람', '눈길', '함박눈', '진눈깨비', '눈보라', '눈사람'] },
+      { type: '어근', word: '눈', tagClass: 'root', hint: '하늘에서 내리는 눈 관련 어근', targetWord: '눈', position: 'any', validAnswers: ['눈꽃', '눈사람', '눈길', '함박눈', '진눈깨비', '눈보라'] },
       { type: '접사', word: '시-', tagClass: 'affix', hint: '‘시어머니 계통’을 나타내는 접두사', targetWord: '시', position: 'start', validAnswers: ['시어머니', '시아버지', '시댁', '시누이', '시동생'] },
       { type: '접사', word: '-롭다', tagClass: 'affix', hint: '형용사를 만들어 주는 접미사', targetWord: '롭다', position: 'end', validAnswers: ['슬기롭다', '이롭다', '지혜롭다', '향기롭다', '신비롭다'] },
       { type: '어근', word: '산', tagClass: 'root', hint: '높이 솟은 자연과 관련된 어근', targetWord: '산', position: 'any', validAnswers: ['산길', '산새', '돌산', '흙산', '산울림', '산꽃', '산골'] },
@@ -391,7 +390,6 @@
       isProcessing = false;
     }
 
-    // 오픈 사전 API 실시간 검색 알고리즘 보완
     async function verifyWithOpenDictAPI(word) {
       try {
         const url = `https://ko.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&format=json&origin=*`;
@@ -400,7 +398,6 @@
         const data = await response.json();
         const pages = data.query.pages;
         const pageId = Object.keys(pages)[0];
-        
         return pageId !== "-1";
       } catch (e) {
         return false;
@@ -419,61 +416,61 @@
 
     async function checkAnswer() {
       if (isProcessing) return;
+      isProcessing = true;
 
-      const inputVal = userInputEl.value.trim().replace(/\s+/g, '');
-      if (!inputVal) {
-        showMessage('단어를 입력해 주세요!', 'msg-incorrect');
-        return;
-      }
-
-      const q = quizData[currentIndex];
-
-      // 1. 접사/어근 결합 규칙 검사
-      if (!checkMorphologyRule(q, inputVal)) {
-        wordCardEl.classList.add('incorrect-anim');
-        showMessage(`이 단어는 제시어 '${q.targetWord}'이(가) 포함되어 있지 않아요!`, 'msg-incorrect');
-        setTimeout(() => wordCardEl.classList.remove('incorrect-anim'), 400);
-        return;
-      }
-
-      // 2. 내장 데이터베이스 우선 검사
-      let isCorrect = q.validAnswers.some(ans => ans.replace(/\s+/g, '') === inputVal);
-
-      // 3. 내장 정답에 없으면 온라인 사전 실시간 검색
-      if (!isCorrect) {
-        showMessage('🔍 사전에 등재된 단어인지 확인 중...', 'msg-info');
-        isProcessing = true;
-        const isDictValid = await verifyWithOpenDictAPI(inputVal);
-        if (isDictValid) {
-          isCorrect = true;
+      try {
+        const inputVal = userInputEl.value.trim().replace(/\s+/g, '');
+        if (!inputVal) {
+          showMessage('단어를 입력해 주세요!', 'msg-incorrect');
+          return;
         }
-        isProcessing = false;
-      }
 
-      if (isCorrect) {
-        isProcessing = true;
-        score += 5;
-        scoreCountEl.textContent = `점수: ${score}점`;
-        
-        wordCardEl.classList.add('correct-anim');
-        showMessage('정답입니다! 🎉 사전에 등록된 올바른 단어입니다!', 'msg-correct');
+        const q = quizData[currentIndex];
 
-        setTimeout(() => {
-          currentIndex++;
-          if (currentIndex < quizData.length) {
-            loadQuestion();
-          } else {
-            showClearScreen();
+        if (!checkMorphologyRule(q, inputVal)) {
+          wordCardEl.classList.add('incorrect-anim');
+          showMessage(`이 단어는 제시어 '${q.targetWord}'이(가) 포함되어 있지 않아요!`, 'msg-incorrect');
+          setTimeout(() => wordCardEl.classList.remove('incorrect-anim'), 400);
+          return;
+        }
+
+        let isCorrect = q.validAnswers.some(ans => ans.replace(/\s+/g, '') === inputVal);
+
+        if (!isCorrect) {
+          showMessage('🔍 사전에 등재된 단어인지 확인 중...', 'msg-info');
+          const isDictValid = await verifyWithOpenDictAPI(inputVal);
+          if (isDictValid) {
+            isCorrect = true;
           }
-        }, 1200);
+        }
 
-      } else {
-        wordCardEl.classList.add('incorrect-anim');
-        showMessage('사전에 등록된 표준어 단어가 아니거나 단어 구조에 맞지 않아요!', 'msg-incorrect');
+        if (isCorrect) {
+          score += 5;
+          scoreCountEl.textContent = `점수: ${score}점`;
+          
+          wordCardEl.classList.add('correct-anim');
+          showMessage('정답입니다! 🎉 사전에 등록된 올바른 단어입니다!', 'msg-correct');
 
-        setTimeout(() => {
-          wordCardEl.classList.remove('incorrect-anim');
-        }, 400);
+          setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+              loadQuestion();
+            } else {
+              showClearScreen();
+            }
+          }, 1200);
+
+        } else {
+          wordCardEl.classList.add('incorrect-anim');
+          showMessage('사전에 등록된 표준어 단어가 아니거나 단어 구조에 맞지 않아요!', 'msg-incorrect');
+
+          setTimeout(() => {
+            wordCardEl.classList.remove('incorrect-anim');
+          }, 400);
+        }
+      } finally {
+        // 정답 성공으로 다음 문제 전환 전이 아니면 상태 원복
+        setTimeout(() => { isProcessing = false; }, 500);
       }
     }
 
@@ -488,8 +485,11 @@
     }
 
     submitBtn.addEventListener('click', checkAnswer);
-    userInputEl.addEventListener('keyup', (e) => {
-      if (e.key === 'Enter') checkAnswer();
+    userInputEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.isComposing) {
+        e.preventDefault();
+        checkAnswer();
+      }
     });
     restartBtn.addEventListener('click', initGame);
 
