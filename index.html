@@ -189,7 +189,7 @@
     button.submit-btn:active { transform: scale(0.98); }
 
     .message-area {
-      min-height: 50px;
+      min-height: 60px;
       font-size: 15px;
       font-weight: 700;
       word-break: keep-all;
@@ -197,18 +197,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      gap: 6px;
     }
 
     .msg-main { font-weight: 800; }
     .msg-meaning {
-      font-size: 13px;
-      font-weight: 500;
-      color: #334155;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1e293b;
       background-color: #f1f5f9;
-      padding: 6px 12px;
-      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 10px;
       margin-top: 4px;
+      line-height: 1.4;
     }
 
     .msg-correct { color: var(--success); }
@@ -295,7 +297,6 @@
   </div>
 
   <script>
-    // 단어별 표준 사전 뜻 데이터베이스가 통합된 50문항 문제 은행
     const questionBank = [
       {
         type: '접사', word: '햇-', tagClass: 'affix', hint: '‘당해에 새로 난’의 뜻을 더함 (접두사)', targetWord: '햇', altWord: '해', position: 'start',
@@ -632,19 +633,19 @@
         let isCorrect = false;
         let wordMeaning = '';
 
-        // 1. 내장 사전 DB 검사
+        // 1. 내장 사전 DB에서 뜻 조회
         if (q.dict && q.dict[inputVal]) {
           isCorrect = true;
           wordMeaning = q.dict[inputVal];
         }
 
-        // 2. 외부 오픈 사전 API 실시간 검사
+        // 2. 내장 목록에 없으면 외부 오픈 사전 API 조회
         if (!isCorrect) {
           showMessage('🔍 사전에 등재된 단어인지 확인 중...', '', 'msg-info');
           const isDictValid = await verifyWithOpenDictAPI(inputVal);
           if (isDictValid) {
             isCorrect = true;
-            wordMeaning = `'${inputVal}'(은)는 사전에 등재된 올바른 표준어입니다.`;
+            wordMeaning = `'${inputVal}'(은)는 표준국어사전에 등록된 표준어 단어입니다.`;
           }
         }
 
@@ -653,9 +654,10 @@
           scoreCountEl.textContent = `점수: ${score}점`;
           
           wordCardEl.classList.add('correct-anim');
-          const meaningTxt = wordMeaning ? `📘 [단어 뜻] "${wordMeaning}"` : '';
+          const meaningTxt = wordMeaning ? `📘 [사전 뜻] "${wordMeaning}"` : `📘 [사전 뜻] "${inputVal}"(은)는 국어사전에 등재된 표준어입니다.`;
           showMessage('정답입니다! 🎉', meaningTxt, 'msg-correct');
 
+          // 정답 화면 및 뜻 풀이를 학생들이 확인할 수 있도록 전시대기시간을 2.2초로 충분히 설정
           setTimeout(() => {
             currentIndex++;
             if (currentIndex < quizData.length) {
@@ -663,7 +665,7 @@
             } else {
               showClearScreen();
             }
-          }, 1600);
+          }, 2200);
 
         } else {
           wordCardEl.classList.add('incorrect-anim');
