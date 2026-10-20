@@ -281,7 +281,7 @@
   <script>
     const questionBank = [
       { type: '접사', word: '풋-', tagClass: 'affix', hint: '‘덜 익은’의 뜻을 더함 (접두사)', targetWord: '풋', position: 'start', validAnswers: ['풋사랑', '풋과일', '풋사과', '풋고추', '풋나물', '풋잠', '풋낯', '풋바둑'] },
-      { type: '어근', word: '물', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 실질적 어근', targetWord: '물', position: 'any', validAnswers: ['샘물', '물개', '먹물', '물통', '물병', '눈물', '물수제비', '물걸레', '수돗물', '물구름', '물안개', '물약'] },
+      { type: '어근', word: '물', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 실질적 어근', targetWord: '물', position: 'any', validAnswers: ['샘물', '물개', '먹물', '물통', '물병', '눈물', '물수제비', '물걸레', '수돗물', '물구름', '물안개', '물약', '물방울'] },
       { type: '접사', word: '-꾼', tagClass: 'affix', hint: '‘어떤 일을 전문적/습관적으로 하는 사람’ (접미사)', targetWord: '꾼', position: 'end', validAnswers: ['누리꾼', '사냥꾼', '장난꾼', '구경꾼', '낚시꾼', '일꾼', '살림꾼', '말꾼', '춤꾼', '씨름꾼'] },
       { type: '접사', word: '햇-', tagClass: 'affix', hint: '‘당해에 새로 난’의 뜻을 더함 (접두사)', targetWord: '햇', position: 'start', validAnswers: ['햇밤', '햇곡식', '햇과일', '햇쌀', '햇감자', '햇고구마', '햇보리', '햇마늘', '햇양파'] },
       { type: '접사', word: '-쟁이', tagClass: 'affix', hint: '‘그 속성을 유난히 많이 지닌 사람’ (접미사)', targetWord: '쟁이', position: 'end', validAnswers: ['방귀쟁이', '고집쟁이', '멋쟁이', '겁쟁이', '수다쟁이', '떼쟁이', '개구쟁이', '욕심쟁이', '변덕쟁이'] },
@@ -289,20 +289,20 @@
       { type: '접사', word: '홑-', tagClass: 'affix', hint: '‘한 겹으로 된’ 또는 ‘하나인’ (접두사)', targetWord: '홑', position: 'start', validAnswers: ['홑이불', '홑잎', '홑옷', '홑문', '홑몸', '홑소리', '홑문장'] },
       { type: '접사', word: '-질', tagClass: 'affix', hint: '‘도구를 사용하는 동작이나 일 또는 행동’ (접미사)', targetWord: '질', position: 'end', validAnswers: ['부채질', '가위질', '걸레질', '다리미질', '숟가락질', '붓질', '칼질', '장난질', '주먹질', '손가락질', '도끼질'] },
       { type: '접사', word: '잔-', tagClass: 'affix', hint: '‘가느다란’ 또는 ‘자잘한’ (접두사)', targetWord: '잔', position: 'start', validAnswers: ['잔가지', '잔가시', '잔머리', '잔주름', '잔돈', '잔심부름', '잔정', '잔파'] },
-      { type: '어근', word: '꽃', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 어근', targetWord: '꽃', position: 'any', validAnswers: ['꽃집', '나팔꽃', '꽃비', '불꽃', '눈꽃', '들꽃', '제비꽃', '꽃밭', '꽃다발'] },
+      { type: '어근', word: '꽃', tagClass: 'root', hint: '다른 어근이나 접사와 결합하는 어근', targetWord: '꽃', position: 'any', validAnswers: ['꽃집', '나팔꽃', '꽃비', '불꽃', '눈꽃', '들꽃', '제비꽃', '꽃밭', '꽃다발', '꽃화분'] },
       { type: '접사', word: '군-', tagClass: 'affix', hint: '‘쓸데없는’ 또는 ‘가선의’ (접두사)', targetWord: '군', position: 'start', validAnswers: ['군소리', '군살', '군식구', '군말', '군손질', '군눈', '군침'] },
       { type: '접사', word: '-보', tagClass: 'affix', hint: '‘그것이 심하거나 많은 사람’ (접미사)', targetWord: '보', position: 'end', validAnswers: ['울보', '먹보', '잠보', '겁보', '털보', '느림보', '꾀보', '뚱뚱보'] },
       { type: '어근', word: '돌', tagClass: 'root', hint: '다른 어근과 결합하는 단단한 어근', targetWord: '돌', position: 'any', validAnswers: ['돌다리', '돌담', '돌산', '돌탑', '돌길', '돌집', '징검다리', '돌멩이'] },
       { type: '접사', word: '날-', tagClass: 'affix', hint: '‘가공하지 않은’의 뜻을 더함 (접두사)', targetWord: '날', position: 'start', validAnswers: ['날고기', '날것', '날계란', '날생선', '날가죽', '날두부'] },
       { type: '접사', word: '-님', tagClass: 'affix', hint: '‘높임’의 뜻을 더함 (접미사)', targetWord: '님', position: 'end', validAnswers: ['선생님', '달님', '해님', '토끼님', '부모님', '임금님', '사장님', '원장님'] },
-      { type: '어근', word: '손', tagClass: 'root', hint: '신체 부위와 관련된 실질적 어근', targetWord: '손', position: 'any', validAnswers: ['손수건', '손수레', '손짓', '손목', '손가락', '손톱', '맨손', '손잡이'] },
+      { type: '어근', word: '손', tagClass: 'root', hint: '신체 부위와 관련된 실질적 어근', targetWord: '손', position: 'any', validAnswers: ['손수건', '손수레', '손짓', '손목', '손가락', '손톱', '맨손', '손잡이', '손난로'] },
       { type: '접사', word: '맨-', tagClass: 'affix', hint: '‘다른 것이 없는’의 뜻을 더함 (접두사)', targetWord: '맨', position: 'start', validAnswers: ['맨손', '맨발', '맨땅', '맨얼굴', '맨입', '맨몸'] },
       { type: '접사', word: '참-', tagClass: 'affix', hint: '‘진짜의’ 또는 ‘품질이 좋은’ (접두사)', targetWord: '참', position: 'start', validAnswers: ['참꽃', '참기름', '참사랑', '참나무', '참말', '참새'] },
       { type: '어근', word: '해', tagClass: 'root', hint: '하늘에 떠 있는 태양 관련 어근', targetWord: '해', position: 'any', validAnswers: ['해돋이', '해살', '해맞이', '햇빛', '해질녘', '해오름'] },
       { type: '접사', word: '-개', tagClass: 'affix', hint: '‘도구’나 ‘사람’을 나타냄 (접미사)', targetWord: '개', position: 'end', validAnswers: ['지우개', '날개', '덮개', '집게', '지게', '베개'] },
       { type: '접사', word: '강-', tagClass: 'affix', hint: '‘다른 것이 섞이지 않은’ (접두사)', targetWord: '강', position: 'start', validAnswers: ['강굴', '강술', '강풀', '강주먹', '강호령'] },
       { type: '접사', word: '-막이', tagClass: 'affix', hint: '‘막는 물건이나 일’ (접미사)', targetWord: '막이', position: 'end', validAnswers: ['바람막이', '물막이', '눈막이', '비막이', '총알막이'] },
-      { type: '어근', word: '불', tagClass: 'root', hint: '뜨거운 불과 관련된 실질적 어근', targetWord: '불', position: 'any', validAnswers: ['불꽃', '불씨', '불꽃놀이', '횃불', '등불', '들불', '불자국'] },
+      { type: '어근', word: '불', tagClass: 'root', hint: '뜨거운 불과 관련된 실질적 어근', targetWord: '불', position: 'any', validAnswers: ['불꽃', '불씨', '불꽃놀이', '횃불', '등불', '들불', '불자국', '불장난', '불장난하다', '불도저', '불조심'] },
       { type: '접사', word: '선-', tagClass: 'affix', hint: '‘서투른’ 또는 ‘충분치 못한’ (접두사)', targetWord: '선', position: 'start', validAnswers: ['선무당', '선하품', '선잠', '선웃음', '선동무'] },
       { type: '접사', word: '-이', tagClass: 'affix', hint: '사람이나 사물을 나타내는 접미사', targetWord: '이', position: 'end', validAnswers: ['길잡이', '목잡이', '해돋이', '높이', '넓이', '길이'] },
       { type: '어근', word: '밤', tagClass: 'root', hint: '어두운 밤 시간을 나타내는 어근', targetWord: '밤', position: 'any', validAnswers: ['밤길', '밤하늘', '알밤', '늦밤', '한밤중', '밤낮'] },
@@ -329,8 +329,11 @@
       { type: '어근', word: '밥', tagClass: 'root', hint: '음식 및 식사와 관련된 어근', targetWord: '밥', position: 'any', validAnswers: ['쌀밥', '보리밥', '볶음밥', '주먹밥', '비빔밥', '찬밥', '덮밥'] },
       { type: '접사', word: '소-', tagClass: 'affix', hint: '‘자잘한’의 뜻을 더하는 접두사', targetWord: '소', position: 'start', validAnswers: ['소나무', '소형', '소규모', '소협곡', '소극장'] },
       { type: '접사', word: '-짓', tagClass: 'affix', hint: '‘신체 동작이나 행동’ (접미사)', targetWord: '짓', position: 'end', validAnswers: ['몸짓', '손짓', '발짓', '눈짓', '몸뚱이짓'] },
-      { type: '어근', word: '나무', tagClass: 'root', hint: '식물 및 목재와 관련된 실질적 어근', targetWord: '나무', position: 'any', validAnswers: ['꿈나무', '참나무', '대나무', '소나무', '단풍나무', '나무꾼', '느티나무'] }
+      { type: '어근', word: '나무', tagClass: 'root', hint: '식물 및 목재와 관련된 실질적 어근', targetWord: '나무', position: 'any', validAnswers: ['꿈나무', '참나무', '대나무', '소나무', '단풍나무', '나무꾼', '느티나무', '나무토막', '나무상자', '나무젓가락'] }
     ];
+
+    // 제외할 고유명사/신조어/인터넷 용어 필터 목록
+    const BANNED_TERMS = ['위키', '닷컴', '게임', '채널', '나무위키', '유튜브'];
 
     let quizData = [];
     let currentIndex = 0;
@@ -405,11 +408,18 @@
     }
 
     function checkMorphologyRule(q, inputVal) {
+      // 1. 금지어(신조어/고유명사) 필터링
+      if (BANNED_TERMS.some(term => inputVal.includes(term))) {
+        return false;
+      }
+
+      // 2. 제시어 결합 위치 필터링
       if (q.position === 'start') {
         return inputVal.startsWith(q.targetWord) && inputVal.length > q.targetWord.length;
       } else if (q.position === 'end') {
         return inputVal.endsWith(q.targetWord) && inputVal.length > q.targetWord.length;
       } else {
+        // 'any' 위치인 경우, 제시어와 정확히 같지 않고 제시어를 포함하는 파생어/합성어여야 함
         return inputVal.includes(q.targetWord) && inputVal.length > q.targetWord.length;
       }
     }
@@ -427,15 +437,18 @@
 
         const q = quizData[currentIndex];
 
+        // 어근/접사 결합 검사 (나무위키 등 제외)
         if (!checkMorphologyRule(q, inputVal)) {
           wordCardEl.classList.add('incorrect-anim');
-          showMessage(`이 단어는 제시어 '${q.targetWord}'이(가) 포함되어 있지 않아요!`, 'msg-incorrect');
+          showMessage(`제시어 '${q.targetWord}'이(가) 포함된 올바른 국어 단어가 아니에요!`, 'msg-incorrect');
           setTimeout(() => wordCardEl.classList.remove('incorrect-anim'), 400);
           return;
         }
 
+        // 내장 데이터베이스 검사
         let isCorrect = q.validAnswers.some(ans => ans.replace(/\s+/g, '') === inputVal);
 
+        // 내장 목록에 없는 일반 국어 단어는 실시간 사전 검색
         if (!isCorrect) {
           showMessage('🔍 사전에 등재된 단어인지 확인 중...', 'msg-info');
           const isDictValid = await verifyWithOpenDictAPI(inputVal);
@@ -469,7 +482,6 @@
           }, 400);
         }
       } finally {
-        // 정답 성공으로 다음 문제 전환 전이 아니면 상태 원복
         setTimeout(() => { isProcessing = false; }, 500);
       }
     }
