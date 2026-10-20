@@ -395,4 +395,103 @@
     async function verifyWithDictAPI(word) {
       try {
         const apiUrl = `https://stdict.korean.go.kr/api/search.do?key=4E37A4FF8AC0E020944F3BC499E18BF9&req_type=json&q=${encodeURIComponent(word)}`;
-        const response
+        const response = await fetch(apiUrl);
+        if (!response.ok) return false;
+        const data = await response.json();
+        return data && data.channel && data.channel.item && data.channel.item.length > 0;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // 어근/접사 구조 결합 규칙 검증
+    function checkMorphologyRule(q, inputVal) {
+      if (q.position === 'start') {
+        return inputVal.startsWith(q.targetWord) && inputVal.length > q.targetWord.length;
+      } else if (q.position === 'end') {
+        return inputVal.endsWith(q.targetWord) && inputVal.length > q.targetWord.length;
+      } else {
+        return inputVal.includes(q.targetWord) && inputVal.length > q.targetWord.length;
+      }
+    }
+
+    async function checkAnswer() {
+      if (isProcessing) return;
+
+      const inputVal = userInputEl.value.trim().replace(/\s+/g, '');
+      if (!inputVal) {
+        showMessage('단어를 입력해 주세요!', 'msg-incorrect');
+        return;
+      }
+
+      const q = quizData[currentIndex];
+
+      // 1. 단어 결합 조건 검사
+      if (!checkMorphologyRule(q, inputVal)) {
+        wordCardEl.classList.add('incorrect-anim');
+        showMessage(`이 단어는 제시어 '${q.targetWord}'이(가) 제대로 결합하지 않았어요!`, 'msg-incorrect');
+        setTimeout(() => wordCardEl.classList.remove('incorrect-anim'), 400);
+        return;
+      }
+
+      // 2. 자체 내장 정답 체크
+      let isCorrect = q.validAnswers.some(ans => ans.replace(/\s+/g, '') === inputVal);
+
+      // 3. 내장 정답 목록에 없으면 실시간 국립국어원 사전 검색 수행
+      if (!isCorrect) {
+        showMessage('사전에서 표준어 검색 중...', 'msg-info');
+        isProcessing = true;
+        const isDictValid = await verifyWithDictAPI(inputVal);
+        if (isDictValid) {
+          isCorrect = true;
+        }
+        isProcessing = false;
+      }
+
+      if (isCorrect) {
+        isProcessing = true;
+        score += 5; // 20문제 x 5점 = 100점
+        scoreCountEl.textContent = `점수: ${score}점`;
+        
+        wordCardEl.classList.add('correct-anim');
+        showMessage('정답입니다! 🎉 표준어 단어를 멋지게 완성했어요!', 'msg-correct');
+
+        setTimeout(() => {
+          currentIndex++;
+          if (currentIndex < quizData.length) {
+            loadQuestion();
+          } else {
+            showClearScreen();
+          }
+        }, 1200);
+
+      } else {
+        wordCardEl.classList.add('incorrect-anim');
+        showMessage('사전에 등재된 표준어가 아니거나 단어 구조에 맞지 않아요!', 'msg-incorrect');
+
+        setTimeout(() => {
+          wordCardEl.classList.remove('incorrect-anim');
+        }, 400);
+      }
+    }
+
+    function showMessage(text, className) {
+      messageEl.textContent = text;
+      messageEl.className = `message-area ${className}`;
+    }
+
+    function showClearScreen() {
+      gameScreen.style.display = 'none';
+      clearScreen.style.display = 'block';
+    }
+
+    submitBtn.addEventListener('click', checkAnswer);
+    userInputEl.addEventListener('keyup', (e) => {
+      if (e.key === 'Enter') checkAnswer();
+    });
+    restartBtn.addEventListener('click', initGame);
+
+    initGame();
+  </script>
+</body>
+</html>
